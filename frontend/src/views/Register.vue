@@ -191,9 +191,24 @@ export default {
 
       this.loading = true
       try {
-        await authService.register(this.form)
-        window.showNotification('¡Cuenta creada exitosamente!', 'success')
-        this.$router.push('/dashboard')
+        const response = await authService.register(this.form)
+        
+        // Si requiere verificación de email
+        if (response.requiresVerification) {
+          window.showNotification(
+            `¡Cuenta creada! Hemos enviado un correo de verificación a ${this.form.email}. Por favor revisa tu bandeja de entrada.`,
+            'success',
+            '',
+            10000 // 10 segundos
+          )
+          // Redirigir a login después de un momento
+          setTimeout(() => {
+            this.$router.push('/login')
+          }, 3000)
+        } else {
+          window.showNotification('¡Cuenta creada exitosamente!', 'success')
+          this.$router.push('/dashboard')
+        }
       } catch (error) {
         const message = error.response?.data?.error || 'Error al registrarse'
         window.showNotification(message, 'error')

@@ -34,25 +34,21 @@
 
 <script>
 import { authService } from '../services/auth.service'
+import { authState } from '../services/authState'
 
 export default {
   name: 'Navbar',
-  data() {
-    return {
-      user: null
-    }
-  },
   computed: {
+    user() {
+      return authState.user
+    },
     isAdmin() {
-      return this.user?.rol === 'admin'
+      return authState.user?.rol === 'admin'
     }
-  },
-  mounted() {
-    this.user = authService.getUser()
   },
   methods: {
-    handleLogout() {
-      authService.logout()
+    async handleLogout() {
+      await authService.logout()
       this.$router.push('/login')
     }
   }

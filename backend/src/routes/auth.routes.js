@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const User = require('../models/User');
+const { sendVerificationEmail } = require('../services/email.service');
 
 // Register
 router.post('/register', async (req, res) => {
@@ -33,30 +35,28 @@ router.post('/register', async (req, res) => {
     const validRoles = ['user', 'admin'];
     const userRole = rol && validRoles.includes(rol) ? rol : 'user';
 
+    // Generar token de verificación (24 horas)
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
     // Create user
     const user = await User.create({
       nombre,
       email,
       password,
-      rol: userRole
+      rol: userRole,
+      emailVerified: false,
+      verificationToken,
+      verificationTokenExpires
     });
 
-    // Generate token
-    const token = jwt.sign(
-      { id: user.id, email: user.email, rol: user.rol },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
-    );
+    // Enviar email de verificación
+    await sendVerificationEmail(user.email, user.nombre, verificationToken);
 
     res.status(201).json({
-      message: 'User registered successfully',
-      user: {
-        id: user.id,
-        nombre: user.nombre,
-        email: user.email,
-        rol: user.rol
-      },
-      token
+      message: 'Usuario registrado. Por favor verifica tu correo electrónico para activar tu cuenta.',
+      email: user.email,
+      requiresVerification: true
     });
   } catch (error) {
     console.error('Register error:', error);
@@ -86,12 +86,28 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
+    // Verificar que el email esté confirmado
+    if (!user.emailVerified) {
+      return res.status(403).json({ 
+        error: 'Por favor verifica tu correo electrónico antes de iniciar sesión',
+        requiresVerification: true
+      });
+    }
+
     // Generate token
     const token = jwt.sign(
       { id: user.id, email: user.email, rol: user.rol },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
     );
+
+    // Establecer cookie httpOnly
+    res.cookie('auth_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 días
+    });
 
     res.json({
       message: 'Login successful',
@@ -100,12 +116,62 @@ router.post('/login', async (req, res) => {
         nombre: user.nombre,
         email: user.email,
         rol: user.rol
-      },
-      token
+      }
     });
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ error: 'Error logging in' });
+  }
+});
+
+// Logout
+router.post('/logout', (req, res) => {
+  res.clearCookie('auth_token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict'
+  });
+  res.json({ message: 'Logout successful' });
+});
+
+// Verificar email
+router.get('/verify-email/:token', async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    // Buscar usuario con el token
+    const user = await User.findOne({
+      where: {
+        verificationToken: token
+      }
+    });
+
+    if (!user) {
+      return res.status(400).json({ 
+        error: 'Token de verificación inválido o expirado' 
+      });
+    }
+
+    // Verificar si el token ha expirado
+    if (user.verificationTokenExpires < new Date()) {
+      return res.status(400).json({ 
+        error: 'El token de verificación ha expirado. Por favor solicita uno nuevo.' 
+      });
+    }
+
+    // Activar la cuenta
+    user.emailVerified = true;
+    user.verificationToken = null;
+    user.verificationTokenExpires = null;
+    await user.save();
+
+    res.json({ 
+      message: '¡Correo verificado exitosamente! Ya puedes iniciar sesión.',
+      success: true
+    });
+  } catch (error) {
+    console.error('Verification error:', error);
+    res.status(500).json({ error: 'Error al verificar el correo' });
   }
 });
 

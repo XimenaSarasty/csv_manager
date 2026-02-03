@@ -3,14 +3,20 @@ const User = require('../models/User');
 
 const authMiddleware = async (req, res, next) => {
   try {
-    // Get token from header
-    const authHeader = req.headers.authorization;
-    
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'No token provided' });
+    let token = null;
+
+    // Prioridad 1: Leer token desde httpOnly cookie
+    if (req.cookies && req.cookies.auth_token) {
+      token = req.cookies.auth_token;
+    }
+    // Fallback: Leer desde Authorization header (para compatibilidad)
+    else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+      token = req.headers.authorization.substring(7);
     }
 
-    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+    if (!token) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
 
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);

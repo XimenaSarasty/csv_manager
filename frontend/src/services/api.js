@@ -7,22 +7,9 @@ const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json'
-  }
-})
-
-// Request interceptor to add auth token
-api.interceptors.request.use(
-  (config) => {
-    const token = authService.getToken()
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
-    return config
   },
-  (error) => {
-    return Promise.reject(error)
-  }
-)
+  withCredentials: true // Importante: enviar cookies httpOnly
+})
 
 // Response interceptor to handle errors
 api.interceptors.response.use(

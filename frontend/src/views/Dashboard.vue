@@ -44,6 +44,7 @@ import FileUpload from '../components/FileUpload.vue'
 import DocumentsTable from '../components/DocumentsTable.vue'
 import { documentService } from '../services/document.service'
 import { authService } from '../services/auth.service'
+import { confirm } from '../services/confirm.service'
 
 export default {
   name: 'Dashboard',
@@ -89,11 +90,10 @@ export default {
     },
 
     async handleDelete(document) {
-      if (!confirm(`¿Estás seguro de eliminar "${document.nombre}"?`)) {
-        return
-      }
-
       try {
+        const ok = await confirm(`¿Estás seguro de eliminar "${document.nombre}"?`)
+        if (!ok) return
+
         await documentService.deleteDocument(document.id)
         window.showNotification('Documento eliminado correctamente', 'success')
         this.loadDocuments()

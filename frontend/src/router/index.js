@@ -19,6 +19,11 @@ const routes = [
     meta: { requiresGuest: true }
   },
   {
+    path: '/verify-email/:token',
+    name: 'VerifyEmail',
+    component: () => import('../views/VerifyEmail.vue')
+  },
+  {
     path: '/dashboard',
     name: 'Dashboard',
     component: () => import('../views/Dashboard.vue'),

@@ -124,7 +124,18 @@ export default {
         this.$router.push('/dashboard')
       } catch (error) {
         const message = error.response?.data?.error || 'Error al iniciar sesión'
-        window.showNotification(message, 'error')
+        const requiresVerification = error.response?.data?.requiresVerification
+        
+        if (requiresVerification) {
+          window.showNotification(
+            'Tu cuenta aún no ha sido verificada. Por favor revisa tu correo electrónico.',
+            'error',
+            '',
+            7000
+          )
+        } else {
+          window.showNotification(message, 'error')
+        }
       } finally {
         this.loading = false
       }

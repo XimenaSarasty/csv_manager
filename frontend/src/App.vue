@@ -2,6 +2,7 @@
   <div id="app" class="min-h-screen bg-gray-50">
     <Navbar v-if="isAuthenticated" />
     <Notification />
+    <ConfirmDialog />
     <main class="transition-all duration-300">
       <router-view />
     </main>
@@ -11,17 +12,19 @@
 <script>
 import Navbar from './components/Navbar.vue'
 import Notification from './components/Notification.vue'
-import { authService } from './services/auth.service'
+import ConfirmDialog from './components/ConfirmDialog.vue'
+import { authState } from './services/authState'
 
 export default {
   name: 'App',
   components: {
     Navbar,
-    Notification
+    Notification,
+    ConfirmDialog
   },
   computed: {
     isAuthenticated() {
-      return authService.isAuthenticated()
+      return !!authState.user
     }
   }
 }
