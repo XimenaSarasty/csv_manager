@@ -41,3 +41,91 @@
     @apply text-red-600 text-sm mt-1;
   }
 }
+/* Modos de accesibilidad */
+
+/* Escala de grises */
+html.grayscale-mode {
+  filter: grayscale(100%);
+}
+
+/* Alto contraste */
+html.high-contrast-mode {
+  filter: contrast(150%);
+}
+
+html.high-contrast-mode body {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+html.high-contrast-mode .bg-white,
+html.high-contrast-mode .card {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+}
+
+html.high-contrast-mode .text-gray-900,
+html.high-contrast-mode .text-gray-800,
+html.high-contrast-mode .text-gray-700,
+html.high-contrast-mode .text-gray-600 {
+  color: #fff !important;
+}
+
+html.high-contrast-mode .bg-gray-50,
+html.high-contrast-mode .bg-gray-100 {
+  background: #1a1a1a !important;
+}
+
+html.high-contrast-mode input,
+html.high-contrast-mode select,
+html.high-contrast-mode textarea {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+}
+
+html.high-contrast-mode .btn-primary {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+html.high-contrast-mode .btn-secondary {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+}
+
+/* Contraste negativo (inversión de colores) */
+html.negative-contrast-mode {
+  filter: invert(100%) hue-rotate(180deg);
+}
+
+html.negative-contrast-mode img,
+html.negative-contrast-mode video,
+html.negative-contrast-mode [style*="background-image"] {
+  filter: invert(100%) hue-rotate(180deg);
+}
+
+/* Fondo claro */
+html.light-background-mode body {
+  background: #fff !important;
+}
+
+html.light-background-mode .bg-gray-50,
+html.light-background-mode .bg-gray-100 {
+  background: #fafafa !important;
+}
+
+html.light-background-mode .shadow-lg,
+html.light-background-mode .shadow-md {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Asegurar que el texto sea legible en todos los modos */
+html.high-contrast-mode *,
+html.negative-contrast-mode *,
+html.light-background-mode * {
+  transition: none !important;
+}

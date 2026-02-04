@@ -32,7 +32,7 @@
               required
               class="input"
               :class="{ 'border-red-500': errors.nombre }"
-              placeholder="Juan Pérez"
+              placeholder="Lorenzo Parra"
               @input="errors.nombre = ''"
             />
             <p v-if="errors.nombre" class="error-text">{{ errors.nombre }}</p>
@@ -50,7 +50,7 @@
               required
               class="input"
               :class="{ 'border-red-500': errors.email }"
-              placeholder="tu@email.com"
+              placeholder="tucorreo@email.com"
               @input="errors.email = ''"
             />
             <p v-if="errors.email" class="error-text">{{ errors.email }}</p>
@@ -60,17 +60,27 @@
             <label for="password" class="label">
               Contraseña
             </label>
-            <input
-              id="password"
-              v-model="form.password"
-              type="password"
-              autocomplete="new-password"
-              required
-              class="input"
-              :class="{ 'border-red-500': errors.password }"
-              placeholder="••••••••"
-              @input="errors.password = ''"
-            />
+            <div class="relative">
+              <input
+                id="password"
+                v-model="form.password"
+                :type="showPassword ? 'text' : 'password'"
+                autocomplete="new-password"
+                required
+                class="input pr-10"
+                :class="{ 'border-red-500': errors.password }"
+                placeholder="••••••••"
+                @input="errors.password = ''"
+              />
+              <button type="button" tabindex="-1" @click="showPassword = !showPassword" class="absolute inset-y-0 right-0 flex items-center px-2 focus:outline-none">
+                <svg v-if="showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-5 0-9-4-9-7s4-7 9-7 9 4 9 7c0 1.306-.835 3.417-2.625 5.175M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18M9.88 9.88A3 3 0 0115 12m-3 3a3 3 0 01-3-3m0 0a3 3 0 013-3m0 0a3 3 0 013 3m0 0a3 3 0 01-3 3m0 0a3 3 0 01-3-3m0 0a3 3 0 013-3m0 0a3 3 0 013 3m0 0a3 3 0 01-3 3m0 0a3 3 0 01-3-3" />
+                </svg>
+              </button>
+            </div>
             <p v-if="errors.password" class="error-text">{{ errors.password }}</p>
           </div>
 
@@ -78,17 +88,27 @@
             <label for="confirmarPassword" class="label">
               Confirmar Contraseña
             </label>
-            <input
-              id="confirmarPassword"
-              v-model="form.confirmarPassword"
-              type="password"
-              autocomplete="new-password"
-              required
-              class="input"
-              :class="{ 'border-red-500': errors.confirmarPassword }"
-              placeholder="••••••••"
-              @input="errors.confirmarPassword = ''"
-            />
+            <div class="relative">
+              <input
+                id="confirmarPassword"
+                v-model="form.confirmarPassword"
+                :type="showConfirmPassword ? 'text' : 'password'"
+                autocomplete="new-password"
+                required
+                class="input pr-10"
+                :class="{ 'border-red-500': errors.confirmarPassword }"
+                placeholder="••••••••"
+                @input="errors.confirmarPassword = ''"
+              />
+              <button type="button" tabindex="-1" @click="showConfirmPassword = !showConfirmPassword" class="absolute inset-y-0 right-0 flex items-center px-2 focus:outline-none">
+                <svg v-if="showConfirmPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-5 0-9-4-9-7s4-7 9-7 9 4 9 7c0 1.306-.835 3.417-2.625 5.175M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18M9.88 9.88A3 3 0 0115 12m-3 3a3 3 0 01-3-3m0 0a3 3 0 013-3m0 0a3 3 0 013 3m0 0a3 3 0 01-3 3m0 0a3 3 0 01-3-3m0 0a3 3 0 013-3m0 0a3 3 0 013 3m0 0a3 3 0 01-3 3m0 0a3 3 0 01-3-3" />
+                </svg>
+              </button>
+            </div>
             <p v-if="errors.confirmarPassword" class="error-text">{{ errors.confirmarPassword }}</p>
           </div>
 
@@ -149,7 +169,9 @@ export default {
         rol: 'user'
       },
       errors: {},
-      loading: false
+      loading: false,
+      showPassword: false,
+      showConfirmPassword: false
     }
   },
   methods: {

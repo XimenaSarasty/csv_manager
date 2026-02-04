@@ -3,6 +3,7 @@
     <Navbar v-if="isAuthenticated" />
     <Notification />
     <ConfirmDialog />
+    <AccessibilityMenu />
     <main class="transition-all duration-300">
       <router-view />
     </main>
@@ -13,6 +14,7 @@
 import Navbar from './components/Navbar.vue'
 import Notification from './components/Notification.vue'
 import ConfirmDialog from './components/ConfirmDialog.vue'
+import AccessibilityMenu from './components/AccessibilityMenu.vue'
 import { authState } from './services/authState'
 
 export default {
@@ -20,7 +22,8 @@ export default {
   components: {
     Navbar,
     Notification,
-    ConfirmDialog
+    ConfirmDialog,
+    AccessibilityMenu
   },
   computed: {
     isAuthenticated() {
