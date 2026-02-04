@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- Drag & Drop Zone -->
+    <!-- Zona de arrastrar y soltar -->
     <div
       @drop.prevent="handleDrop"
       @dragover.prevent="isDragging = true"
@@ -50,7 +50,7 @@
         </p>
       </div>
 
-      <!-- Upload Progress -->
+      <!-- Progreso de carga -->
       <div v-else class="space-y-4">
         <svg class="animate-spin h-12 w-12 mx-auto text-primary-600" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
@@ -60,7 +60,7 @@
       </div>
     </div>
 
-    <!-- File Info -->
+    <!-- Información del archivo -->
     <div v-if="selectedFile && !uploading" class="mt-4 p-4 bg-gray-50 rounded-lg flex items-center justify-between">
       <div class="flex items-center space-x-3">
         <svg class="h-8 w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -82,7 +82,7 @@
       </button>
     </div>
 
-    <!-- Upload Button -->
+    <!-- Botón de subida -->
     <div v-if="selectedFile && !uploading" class="mt-4">
       <button
         @click="uploadFile"
@@ -123,13 +123,13 @@ export default {
     },
 
     processFile(file) {
-      // Validate file type
+      // Validar el tipo de archivo
       if (!file.name.endsWith('.csv')) {
         window.showNotification('Solo se permiten archivos CSV', 'error')
         return
       }
 
-      // Validate file size (5MB)
+      // Validar el tamaño del archivo (5MB)
       if (file.size > 5 * 1024 * 1024) {
         window.showNotification('El archivo no puede superar los 5MB', 'error')
         return
@@ -153,7 +153,7 @@ export default {
       } catch (error) {
         const errorData = error.response?.data
         if (errorData?.details && Array.isArray(errorData.details)) {
-          // Show validation errors
+          // Mostrar errores de validación
           const errorList = errorData.details.slice(0, 5).join('\n')
           const moreErrors = errorData.details.length > 5 
             ? `\n... y ${errorData.details.length - 5} errores más` 

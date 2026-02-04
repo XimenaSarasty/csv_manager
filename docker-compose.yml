@@ -51,7 +51,7 @@ services:
     # Ejecutar migraciones antes de iniciar el servidor
     command: sh -c "npm run migrate && npm run dev"
 
-  # Frontend (Optional - can run locally too)
+  # Frontend 
   frontend:
     build:
       context: ./frontend

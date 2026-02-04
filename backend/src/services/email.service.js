@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 
 // Configuración del transportador de email
 const createTransporter = async () => {
-  // Para producción: usar un servicio real como SendGrid, Mailgun, o SMTP de tu proveedor
+  // Para producción: usar un servicio real como SendGrid o cualquier otro servicio. En este caso se usa este sólo para efectos de pruebas locales.
   if (process.env.NODE_ENV === 'production') {
     return nodemailer.createTransport({
       host: process.env.SMTP_HOST,
@@ -19,9 +19,9 @@ const createTransporter = async () => {
   try {
     const testAccount = await nodemailer.createTestAccount();
     
-    console.log('📧 Usando cuenta de prueba Ethereal:');
-    console.log('   User:', testAccount.user);
-    console.log('   Pass:', testAccount.pass);
+    console.log('Usando cuenta de prueba Ethereal:');
+    console.log('User:', testAccount.user);
+    console.log('Pass:', testAccount.pass);
     
     return nodemailer.createTransport({
       host: 'smtp.ethereal.email',
@@ -33,7 +33,7 @@ const createTransporter = async () => {
       }
     });
   } catch (error) {
-    console.error('⚠️ No se pudo crear cuenta de prueba Ethereal, usando configuración manual');
+    console.error('No se pudo crear cuenta de prueba Ethereal, usando configuración manual');
     return nodemailer.createTransport({
       host: 'smtp.ethereal.email',
       port: 587,
@@ -104,13 +104,13 @@ const sendVerificationEmail = async (email, nombre, verificationToken) => {
     
     // En desarrollo con Ethereal, mostrar el preview URL
     if (process.env.NODE_ENV !== 'production') {
-      console.log('📧 Email de verificación enviado a:', email);
-      console.log('📧 Preview URL:', nodemailer.getTestMessageUrl(info));
+      console.log('Email de verificación enviado a:', email);
+      console.log('Preview URL:', nodemailer.getTestMessageUrl(info));
     }
     
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error('❌ Error enviando email de verificación:', error);
+    console.error('Error enviando email de verificación:', error);
     return { success: false, error: error.message };
   }
 };

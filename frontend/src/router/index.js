@@ -36,7 +36,7 @@ const router = createRouter({
   routes
 })
 
-// Navigation guards
+// Guardias de navegación
 router.beforeEach((to, from, next) => {
   const isAuthenticated = authService.isAuthenticated()
 

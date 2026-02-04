@@ -46,7 +46,7 @@ const Record = sequelize.define('Record', {
   timestamps: true
 });
 
-// Associations
+// Relaciones
 Record.belongsTo(Document, { foreignKey: 'documentId', onDelete: 'CASCADE' });
 Document.hasMany(Record, { foreignKey: 'documentId' });
 

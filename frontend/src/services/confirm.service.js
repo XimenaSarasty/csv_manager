@@ -9,7 +9,6 @@ export function subscribe(cb) {
 }
 
 export function open(options) {
-  // options: { message, title, confirmText, cancelText, _resolve }
   subscribers.forEach(cb => cb(options));
 }
 

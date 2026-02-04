@@ -18,6 +18,12 @@ dist/
 build/
 *.log
 
+# Testing
+playwright-report/
+test-results/
+*.spec.js
+*.test.js
+
 # IDE
 .vscode/
 .idea/

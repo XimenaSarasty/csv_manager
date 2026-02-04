@@ -2,7 +2,7 @@ import { reactive } from 'vue'
 
 const USER_KEY = 'auth_user'
 
-// Estado reactivo compartido (token ahora viene en httpOnly cookie)
+// Estado reactivo compartido (token viene en httpOnly cookie)
 export const authState = reactive({
   user: (() => {
     try {

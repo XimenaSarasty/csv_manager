@@ -32,7 +32,7 @@ const Document = sequelize.define('Document', {
   timestamps: true
 });
 
-// Associations
+// Relaciones
 Document.belongsTo(User, { foreignKey: 'userId', as: 'usuario' });
 User.hasMany(Document, { foreignKey: 'userId' });
 

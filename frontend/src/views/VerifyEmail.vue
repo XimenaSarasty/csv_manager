@@ -1,13 +1,13 @@
 <template>
   <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full">
-      <!-- Loading state -->
+      <!-- Estado de carga -->
       <div v-if="loading" class="text-center">
         <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
         <p class="mt-4 text-gray-600">Verificando tu correo electrónico...</p>
       </div>
 
-      <!-- Success state -->
+      <!-- Estado de éxito -->
       <div v-else-if="verified" class="text-center">
         <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100">
           <svg class="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -25,7 +25,7 @@
         </div>
       </div>
 
-      <!-- Error state -->
+      <!-- Estado de error -->
       <div v-else class="text-center">
         <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100">
           <svg class="h-10 w-10 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">

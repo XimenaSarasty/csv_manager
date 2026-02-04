@@ -5,12 +5,12 @@ const crypto = require('crypto');
 const User = require('../models/User');
 const { sendVerificationEmail } = require('../services/email.service');
 
-// Register
+// Registro
 router.post('/register', async (req, res) => {
   try {
     const { nombre, email, password, confirmarPassword, rol } = req.body;
 
-    // Validation
+    // Validación
     if (!nombre || !email || !password || !confirmarPassword) {
       return res.status(400).json({ 
         error: 'All fields are required: nombre, email, password, confirmarPassword' 
@@ -25,13 +25,13 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Password must be at least 6 characters' });
     }
 
-    // Check if user already exists
+    // Compruebe si el usuario ya existe
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ error: 'Email already registered' });
     }
 
-    // Validate role
+    // Validar rol
     const validRoles = ['user', 'admin'];
     const userRole = rol && validRoles.includes(rol) ? rol : 'user';
 
@@ -39,7 +39,7 @@ router.post('/register', async (req, res) => {
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
-    // Create user
+    // Crear usuario
     const user = await User.create({
       nombre,
       email,
@@ -64,29 +64,29 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login
+// Inicio de sesión
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validation
+    // Validación
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required' });
     }
 
-    // Find user
+    // Buscar usuario
     const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // Check password
+    // Verificar contraseña
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // Verificar que el email esté confirmado
+    // Verificar que el correo electrónico esté confirmado
     if (!user.emailVerified) {
       return res.status(403).json({ 
         error: 'Por favor verifica tu correo electrónico antes de iniciar sesión',
@@ -94,7 +94,7 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Generate token
+    // Generar token
     const token = jwt.sign(
       { id: user.id, email: user.email, rol: user.rol },
       process.env.JWT_SECRET,
@@ -124,7 +124,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Logout
+// Cierre de sesión
 router.post('/logout', (req, res) => {
   res.clearCookie('auth_token', {
     httpOnly: true,
@@ -134,7 +134,7 @@ router.post('/logout', (req, res) => {
   res.json({ message: 'Logout successful' });
 });
 
-// Verificar email
+// Verificar correo electrónico
 router.get('/verify-email/:token', async (req, res) => {
   try {
     const { token } = req.params;

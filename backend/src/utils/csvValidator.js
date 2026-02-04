@@ -37,7 +37,7 @@ const validateCSVContent = (fileContent) => {
       const rowNumber = index + 2; // header + 1-based index
       const rowErrors = [];
 
-      // Fields normalized
+      // Campos normalizados
       const correo = record.correo ? String(record.correo).trim() : '';
       const nombre = record.nombre ? String(record.nombre).trim() : '';
       const telefono = record.telefono ? String(record.telefono).trim() : '';
@@ -104,7 +104,7 @@ const validateCSVContent = (fileContent) => {
         }
       }
 
-      // notas (opcional) - validar que no tenga números si existe
+      // notas 
       if (notas) {
         if (notas.length > 1000) {
           rowErrors.push(`Fila ${rowNumber}: 'notas' excede la longitud máxima de 1000 caracteres`);

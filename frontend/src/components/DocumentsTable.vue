@@ -21,7 +21,7 @@
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-        <!-- Loading State -->
+        <!-- Estado de carga -->
         <tr v-if="loading">
           <td colspan="5" class="px-6 py-12 text-center">
             <svg class="animate-spin h-8 w-8 mx-auto text-primary-600" viewBox="0 0 24 24">
@@ -32,7 +32,7 @@
           </td>
         </tr>
 
-        <!-- Empty State -->
+        <!-- Estado vacío -->
         <tr v-else-if="documents.length === 0">
           <td colspan="5" class="px-6 py-12 text-center">
             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -43,7 +43,7 @@
           </td>
         </tr>
 
-        <!-- Document Rows -->
+        <!-- Filas de Documentos -->
         <tr 
           v-else
           v-for="doc in documents" 
@@ -72,7 +72,7 @@
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
             <div class="flex justify-end space-x-2">
-              <!-- Download Button -->
+              <!-- Botón de descarga -->
               <button
                 @click="$emit('download', doc)"
                 class="text-primary-600 hover:text-primary-900 transition-colors p-2 rounded-lg hover:bg-primary-50"
@@ -84,7 +84,7 @@
                 </svg>
               </button>
 
-              <!-- Delete Button (Admin Only) -->
+              <!-- Botón de eliminación (Solo Admin) -->
               <button
                 v-if="isAdmin"
                 @click="$emit('delete', doc)"

@@ -8,7 +8,7 @@ const checkRole = require('../middleware/rbac.middleware');
 const { Document, Record, User } = require('../models');
 const { validateCSVContent } = require('../utils/csvValidator');
 
-// Configure multer for file upload
+// Configurar multer para cargar archivos
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
     const uploadDir = path.join(__dirname, '../../uploads');
@@ -39,21 +39,21 @@ const upload = multer({
   }
 });
 
-// Upload CSV
+// Subir CSV
 router.post('/upload', authMiddleware, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    // Read file content
+    // Leer contenido del archivo
     const fileContent = await fs.readFile(req.file.path, 'utf-8');
 
-    // Validate CSV content
+    // Validar contenido CSV
     const validation = validateCSVContent(fileContent);
 
     if (!validation.valid) {
-      // Delete uploaded file if validation fails
+      // Eliminar archivo subido si la validación falla
       await fs.unlink(req.file.path);
       return res.status(400).json({
         error: validation.message,
@@ -61,7 +61,7 @@ router.post('/upload', authMiddleware, upload.single('file'), async (req, res) =
       });
     }
 
-    // Create document record
+    // Crear registro de documento
     const document = await Document.create({
       nombre: req.file.originalname,
       rutaArchivo: req.file.path,
@@ -69,7 +69,7 @@ router.post('/upload', authMiddleware, upload.single('file'), async (req, res) =
       userId: req.user.id
     });
 
-    // Create records in database
+    // Crear registros en la base de datos
     const recordsToCreate = validation.records.map(record => ({
       ...record,
       documentId: document.id
@@ -91,7 +91,7 @@ router.post('/upload', authMiddleware, upload.single('file'), async (req, res) =
   } catch (error) {
     console.error('Upload error:', error);
     
-    // Clean up uploaded file in case of error
+    // Eliminar archivo subido en caso de error
     if (req.file) {
       try {
         await fs.unlink(req.file.path);
@@ -104,7 +104,7 @@ router.post('/upload', authMiddleware, upload.single('file'), async (req, res) =
   }
 });
 
-// Get all documents
+// Obtener todos los documentos
 router.get('/', authMiddleware, async (req, res) => {
   try {
     const documents = await Document.findAll({
@@ -131,7 +131,7 @@ router.get('/', authMiddleware, async (req, res) => {
   }
 });
 
-// Download document
+// Descargar documentos
 router.get('/:id/download', authMiddleware, async (req, res) => {
   try {
     const document = await Document.findByPk(req.params.id);
@@ -140,7 +140,7 @@ router.get('/:id/download', authMiddleware, async (req, res) => {
       return res.status(404).json({ error: 'Document not found' });
     }
 
-    // Check if file exists
+    // Verificar si el archivo existe
     try {
       await fs.access(document.rutaArchivo);
     } catch {
@@ -154,7 +154,7 @@ router.get('/:id/download', authMiddleware, async (req, res) => {
   }
 });
 
-// Delete document (admin only)
+// Eliminar documento (solo admin)
 router.delete('/:id', authMiddleware, checkRole('admin'), async (req, res) => {
   try {
     const document = await Document.findByPk(req.params.id);
@@ -163,14 +163,14 @@ router.delete('/:id', authMiddleware, checkRole('admin'), async (req, res) => {
       return res.status(404).json({ error: 'Document not found' });
     }
 
-    // Delete file from disk
+    // Eliminar archivo del disco
     try {
       await fs.unlink(document.rutaArchivo);
     } catch (error) {
       console.warn('File already deleted or not found:', error.message);
     }
 
-    // Delete document (cascade will delete related records)
+    // Eliminar documento (en cascada se eliminarán los registros relacionados)
     await document.destroy();
 
     res.json({ message: 'Document deleted successfully' });

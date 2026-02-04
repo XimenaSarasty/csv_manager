@@ -11,7 +11,7 @@ const api = axios.create({
   withCredentials: true // Importante: enviar cookies httpOnly
 })
 
-// Response interceptor to handle errors
+// Interceptor de respuesta para gestionar errores
 api.interceptors.response.use(
   (response) => response,
   (error) => {

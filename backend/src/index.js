@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const { sequelize } = require('./config/database');
 
-// Load environment variables
+// Cargar variables de entorno
 dotenv.config();
 
 const app = express();
@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+// Rotas
 app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/documents', require('./routes/documents.routes'));
 
@@ -28,7 +28,7 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Error handling middleware
+// Middleware de manejo de errores
 app.use((err, req, res, next) => {
   console.error('Error:', err);
   res.status(err.status || 500).json({
@@ -37,26 +37,26 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Database connection and server start
+// Conexión a la base de datos e inicio del servidor
 const startServer = async () => {
   try {
-    // Test database connection
+    // Probar la conexión a la base de datos
     await sequelize.authenticate();
-    console.log('✅ Database connection established successfully.');
+    console.log('Database connection established successfully.');
 
     // NO usar sequelize.sync() - usar migraciones en su lugar
     // Para correr migraciones: npm run migrate
     // await sequelize.sync({ alter: process.env.NODE_ENV === 'development' });
-    console.log('⚠️  Recuerda ejecutar las migraciones: npm run migrate');
+    console.log('Recuerda ejecutar las migraciones: npm run migrate');
 
-    // Start server
+    // Iniciar servidor
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
-      console.log(`📊 Environment: ${process.env.NODE_ENV}`);
-      console.log(`🗄️  Schema: csv_app (NO public)`);
+      console.log(`Server running on http://localhost:${PORT}`);
+      console.log(`Environment: ${process.env.NODE_ENV}`);
+      console.log(`Schema: csv_app (NO public)`);
     });
   } catch (error) {
-    console.error('❌ Unable to start server:', error);
+    console.error('Unable to start server:', error);
     process.exit(1);
   }
 };

@@ -1,18 +1,18 @@
 <template>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Header -->
+    <!-- Cabecera -->
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
       <p class="mt-2 text-gray-600">Gestión de documentos CSV</p>
     </div>
 
-    <!-- Upload Section -->
+    <!-- Sección de carga -->
     <div class="card mb-8">
       <h2 class="text-xl font-semibold text-gray-900 mb-4">Cargar Documento CSV</h2>
       <FileUpload @file-uploaded="handleFileUploaded" />
     </div>
 
-    <!-- Documents Table -->
+    <!-- Tabla de Documentos -->
     <div class="card">
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-xl font-semibold text-gray-900">Documentos Cargados</h2>
